@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mei.mapper.MeiConsultMapper">
+    
+    <resultMap type="MeiConsult" id="MeiConsultResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="expertId"    column="expert_id"    />
+        <result property="title"    column="title"    />
+        <result property="content"    column="content"    />
+        <result property="reply"    column="reply"    />
+        <result property="type"    column="type"    />
+        <result property="status"    column="status"    />
+    </resultMap>
+
+    <sql id="selectMeiConsultVo">
+        select id, user_id, expert_id, title, content, reply, type, status from mei_consult
+    </sql>
+
+    <select id="selectMeiConsultList" parameterType="MeiConsult" resultMap="MeiConsultResult">
+        <include refid="selectMeiConsultVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="expertId != null "> and expert_id = #{expertId}</if>
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="reply != null  and reply != ''"> and reply = #{reply}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectMeiConsultById" parameterType="Long" resultMap="MeiConsultResult">
+        <include refid="selectMeiConsultVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertMeiConsult" parameterType="MeiConsult" useGeneratedKeys="true" keyProperty="id">
+        insert into mei_consult
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="expertId != null">expert_id,</if>
+            <if test="title != null and title != ''">title,</if>
+            <if test="content != null and content != ''">content,</if>
+            <if test="reply != null">reply,</if>
+            <if test="type != null and type != ''">type,</if>
+            <if test="status != null">status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="expertId != null">#{expertId},</if>
+            <if test="title != null and title != ''">#{title},</if>
+            <if test="content != null and content != ''">#{content},</if>
+            <if test="reply != null">#{reply},</if>
+            <if test="type != null and type != ''">#{type},</if>
+            <if test="status != null">#{status},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMeiConsult" parameterType="MeiConsult">
+        update mei_consult
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="expertId != null">expert_id = #{expertId},</if>
+            <if test="title != null and title != ''">title = #{title},</if>
+            <if test="content != null and content != ''">content = #{content},</if>
+            <if test="reply != null">reply = #{reply},</if>
+            <if test="type != null and type != ''">type = #{type},</if>
+            <if test="status != null">status = #{status},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteMeiConsultById" parameterType="Long">
+        delete from mei_consult where id = #{id}
+    </delete>
+
+    <delete id="deleteMeiConsultByIds">
+        delete from mei_consult where id in
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

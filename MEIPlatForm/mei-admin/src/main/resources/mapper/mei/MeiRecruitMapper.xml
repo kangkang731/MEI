@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mei.mapper.MeiRecruitMapper">
+    
+    <resultMap type="MeiRecruit" id="MeiRecruitResult">
+        <result property="id"    column="id"    />
+        <result property="companyId"    column="company_id"    />
+        <result property="jobName"    column="job_name"    />
+        <result property="requirement"    column="requirement"    />
+        <result property="salary"    column="salary"    />
+        <result property="status"    column="status"    />
+    </resultMap>
+
+    <sql id="selectMeiRecruitVo">
+        select id, company_id, job_name, requirement, salary, status from mei_recruit
+    </sql>
+
+    <select id="selectMeiRecruitList" parameterType="MeiRecruit" resultMap="MeiRecruitResult">
+        <include refid="selectMeiRecruitVo"/>
+        <where>  
+            <if test="companyId != null "> and company_id = #{companyId}</if>
+            <if test="jobName != null  and jobName != ''"> and job_name like concat('%', #{jobName}, '%')</if>
+            <if test="requirement != null  and requirement != ''"> and requirement = #{requirement}</if>
+            <if test="salary != null  and salary != ''"> and salary = #{salary}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectMeiRecruitById" parameterType="Long" resultMap="MeiRecruitResult">
+        <include refid="selectMeiRecruitVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertMeiRecruit" parameterType="MeiRecruit" useGeneratedKeys="true" keyProperty="id">
+        insert into mei_recruit
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="companyId != null">company_id,</if>
+            <if test="jobName != null and jobName != ''">job_name,</if>
+            <if test="requirement != null">requirement,</if>
+            <if test="salary != null">salary,</if>
+            <if test="status != null">status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="companyId != null">#{companyId},</if>
+            <if test="jobName != null and jobName != ''">#{jobName},</if>
+            <if test="requirement != null">#{requirement},</if>
+            <if test="salary != null">#{salary},</if>
+            <if test="status != null">#{status},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMeiRecruit" parameterType="MeiRecruit">
+        update mei_recruit
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="companyId != null">company_id = #{companyId},</if>
+            <if test="jobName != null and jobName != ''">job_name = #{jobName},</if>
+            <if test="requirement != null">requirement = #{requirement},</if>
+            <if test="salary != null">salary = #{salary},</if>
+            <if test="status != null">status = #{status},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteMeiRecruitById" parameterType="Long">
+        delete from mei_recruit where id = #{id}
+    </delete>
+
+    <delete id="deleteMeiRecruitByIds">
+        delete from mei_recruit where id in
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

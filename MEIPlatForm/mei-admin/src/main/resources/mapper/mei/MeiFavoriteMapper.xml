@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mei.mapper.MeiFavoriteMapper">
+    
+    <resultMap type="MeiFavorite" id="MeiFavoriteResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="policyId"    column="policy_id"    />
+        <result property="policyTitle"    column="policy_title"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectMeiFavoriteVo">
+        select id, user_id, policy_id, policy_title, create_time from mei_favorite
+    </sql>
+
+    <select id="selectMeiFavoriteList" parameterType="MeiFavorite" resultMap="MeiFavoriteResult">
+        <include refid="selectMeiFavoriteVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="policyId != null "> and policy_id = #{policyId}</if>
+            <if test="policyTitle != null  and policyTitle != ''"> and policy_title like concat('%', #{policyTitle}, '%')</if>
+        </where>
+        order by create_time desc
+    </select>
+    
+    <select id="selectMeiFavoriteById" parameterType="Long" resultMap="MeiFavoriteResult">
+        <include refid="selectMeiFavoriteVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectMeiFavoriteByUserAndPolicy" resultMap="MeiFavoriteResult">
+        <include refid="selectMeiFavoriteVo"/>
+        where user_id = #{userId} and policy_id = #{policyId}
+    </select>
+        
+    <insert id="insertMeiFavorite" parameterType="MeiFavorite" useGeneratedKeys="true" keyProperty="id">
+        insert into mei_favorite
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="policyId != null">policy_id,</if>
+            <if test="policyTitle != null and policyTitle != ''">policy_title,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="policyId != null">#{policyId},</if>
+            <if test="policyTitle != null and policyTitle != ''">#{policyTitle},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMeiFavorite" parameterType="MeiFavorite">
+        update mei_favorite
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="policyId != null">policy_id = #{policyId},</if>
+            <if test="policyTitle != null and policyTitle != ''">policy_title = #{policyTitle},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteMeiFavoriteById" parameterType="Long">
+        delete from mei_favorite where id = #{id}
+    </delete>
+
+    <delete id="deleteMeiFavoriteByIds" parameterType="String">
+        delete from mei_favorite where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

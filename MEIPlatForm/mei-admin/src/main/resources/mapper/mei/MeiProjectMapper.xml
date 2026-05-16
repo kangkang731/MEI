@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mei.mapper.MeiProjectMapper">
+    
+    <resultMap type="MeiProject" id="MeiProjectResult">
+        <result property="id"    column="id"    />
+        <result property="companyId"    column="company_id"    />
+        <result property="projectName"    column="project_name"    />
+        <result property="projectType"    column="project_type"    />
+        <result property="content"    column="content"    />
+        <result property="attach"    column="attach"    />
+        <result property="status"    column="status"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectMeiProjectVo">
+        select id, company_id, project_name, project_type, content, attach, status, create_time from mei_project
+    </sql>
+
+    <select id="selectMeiProjectList" parameterType="MeiProject" resultMap="MeiProjectResult">
+        <include refid="selectMeiProjectVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+            <if test="companyId != null "> and company_id = #{companyId}</if>
+            <if test="projectName != null  and projectName != ''"> and project_name like concat('%', #{projectName}, '%')</if>
+            <if test="projectType != null  and projectType != ''"> and project_type = #{projectType}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="attach != null  and attach != ''"> and attach = #{attach}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectMeiProjectById" parameterType="Long" resultMap="MeiProjectResult">
+        <include refid="selectMeiProjectVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertMeiProject" parameterType="MeiProject" useGeneratedKeys="true" keyProperty="id">
+        insert into mei_project
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="companyId != null">company_id,</if>
+            <if test="projectName != null and projectName != ''">project_name,</if>
+            <if test="projectType != null">project_type,</if>
+            <if test="content != null">content,</if>
+            <if test="attach != null">attach,</if>
+            <if test="status != null">status,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="companyId != null">#{companyId},</if>
+            <if test="projectName != null and projectName != ''">#{projectName},</if>
+            <if test="projectType != null">#{projectType},</if>
+            <if test="content != null">#{content},</if>
+            <if test="attach != null">#{attach},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMeiProject" parameterType="MeiProject">
+        update mei_project
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="companyId != null">company_id = #{companyId},</if>
+            <if test="projectName != null and projectName != ''">project_name = #{projectName},</if>
+            <if test="projectType != null">project_type = #{projectType},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="attach != null">attach = #{attach},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteMeiProjectById" parameterType="Long">
+        delete from mei_project where id = #{id}
+    </delete>
+
+    <delete id="deleteMeiProjectByIds">
+        delete from mei_project where id in
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

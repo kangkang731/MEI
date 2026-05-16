@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <!-- 关键修改1：父项目依赖改为com.mei:mei（匹配新的父pom配置） -->
+    <parent>
+        <artifactId>mei</artifactId>
+        <groupId>com.mei</groupId>
+        <version>3.9.2</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- 关键修改2：自身artifactId改为mei-system（匹配模块目录名） -->
+    <artifactId>mei-system</artifactId>
+
+    <description>
+        system系统模块
+    </description>
+
+    <dependencies>
+
+        <!-- 关键修改3：依赖的通用工具模块改为com.mei:mei-common（匹配新的common模块标识） -->
+        <dependency>
+            <groupId>com.mei</groupId>
+            <artifactId>mei-common</artifactId>
+        </dependency>
+
+    </dependencies>
+
+</project>

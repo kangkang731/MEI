@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mei.mapper.MeiStatisticsMapper">
+    
+    <resultMap type="MeiStatistics" id="MeiStatisticsResult">
+        <result property="id"    column="id"    />
+        <result property="companyNum"    column="company_num"    />
+        <result property="projectNum"    column="project_num"    />
+        <result property="achievementNum"    column="achievement_num"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectMeiStatisticsVo">
+        select id, company_num, project_num, achievement_num, create_time from mei_statistics
+    </sql>
+
+    <select id="selectMeiStatisticsList" parameterType="MeiStatistics" resultMap="MeiStatisticsResult">
+        <include refid="selectMeiStatisticsVo"/>
+        <where>  
+            <if test="companyNum != null "> and company_num = #{companyNum}</if>
+            <if test="projectNum != null "> and project_num = #{projectNum}</if>
+            <if test="achievementNum != null "> and achievement_num = #{achievementNum}</if>
+        </where>
+    </select>
+    
+    <select id="selectMeiStatisticsById" parameterType="Long" resultMap="MeiStatisticsResult">
+        <include refid="selectMeiStatisticsVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertMeiStatistics" parameterType="MeiStatistics" useGeneratedKeys="true" keyProperty="id">
+        insert into mei_statistics
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="companyNum != null">company_num,</if>
+            <if test="projectNum != null">project_num,</if>
+            <if test="achievementNum != null">achievement_num,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="companyNum != null">#{companyNum},</if>
+            <if test="projectNum != null">#{projectNum},</if>
+            <if test="achievementNum != null">#{achievementNum},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMeiStatistics" parameterType="MeiStatistics">
+        update mei_statistics
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="companyNum != null">company_num = #{companyNum},</if>
+            <if test="projectNum != null">project_num = #{projectNum},</if>
+            <if test="achievementNum != null">achievement_num = #{achievementNum},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteMeiStatisticsById" parameterType="Long">
+        delete from mei_statistics where id = #{id}
+    </delete>
+
+    <delete id="deleteMeiStatisticsByIds">
+        delete from mei_statistics where id in
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

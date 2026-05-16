@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mei.mapper.MeiAchievementMapper">
+    
+    <resultMap type="com.mei.domain.MeiAchievement" id="MeiAchievementResult">
+        <result property="id"    column="id"    />
+        <result property="projectId"    column="project_id"    />
+        <result property="title"    column="title"    />
+        <result property="cover"    column="cover"    />
+        <result property="content"    column="content"    />
+        <result property="isShow"    column="is_show"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectMeiAchievementVo">
+        select id, project_id, title, cover, content, is_show, create_time from mei_achievement
+    </sql>
+
+    <select id="selectMeiAchievementList" parameterType="com.mei.domain.MeiAchievement" resultMap="MeiAchievementResult">
+        <include refid="selectMeiAchievementVo"/>
+        <where>  
+            <if test="id != null  and id != ''"> and id = #{id}</if>
+            <if test="projectId != null  and projectId != ''"> and project_id = #{projectId}</if>
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="cover != null  and cover != ''"> and cover = #{cover}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="isShow != null  and isShow != ''"> and is_show = #{isShow}</if>
+        </where>
+    </select>
+    
+    <select id="selectMeiAchievementById" parameterType="String" resultMap="MeiAchievementResult">
+        <include refid="selectMeiAchievementVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertMeiAchievement" parameterType="com.mei.domain.MeiAchievement">
+        insert into mei_achievement
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null and id != ''">id,</if>
+            <if test="projectId != null and projectId != ''">project_id,</if>
+            <if test="title != null and title != ''">title,</if>
+            <if test="cover != null and cover != ''">cover,</if>
+            <if test="content != null and content != ''">content,</if>
+            <if test="isShow != null and isShow != ''">is_show,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null and id != ''">#{id},</if>
+            <if test="projectId != null and projectId != ''">#{projectId},</if>
+            <if test="title != null and title != ''">#{title},</if>
+            <if test="cover != null and cover != ''">#{cover},</if>
+            <if test="content != null and content != ''">#{content},</if>
+            <if test="isShow != null and isShow != ''">#{isShow},</if>
+            <if test="createTime != null">NOW(),</if>
+         </trim>
+    </insert>
+
+    <update id="updateMeiAchievement" parameterType="com.mei.domain.MeiAchievement">
+        update mei_achievement
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="projectId != null and projectId != ''">project_id = #{projectId},</if>
+            <if test="title != null and title != ''">title = #{title},</if>
+            <if test="cover != null and cover != ''">cover = #{cover},</if>
+            <if test="content != null and content != ''">content = #{content},</if>
+            <if test="isShow != null and isShow != ''">is_show = #{isShow},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteMeiAchievementById" parameterType="String">
+        delete from mei_achievement where id = #{id}
+    </delete>
+    <delete id="deleteMeiAchievementByIds">
+        delete from mei_achievement where id in
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

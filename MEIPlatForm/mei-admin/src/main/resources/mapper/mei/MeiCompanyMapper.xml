@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mei.mapper.MeiCompanyMapper">
+    
+    <resultMap type="MeiCompany" id="MeiCompanyResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="companyName"    column="company_name"    />
+        <result property="region"    column="region"    />
+        <result property="business"    column="business"    />
+        <result property="linkman"    column="linkman"    />
+        <result property="phone"    column="phone"    />
+        <result property="status"    column="status"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectMeiCompanyVo">
+        select id, user_id, company_name, region, business, linkman, phone, status, create_time from mei_company
+    </sql>
+
+    <select id="selectMeiCompanyList" parameterType="MeiCompany" resultMap="MeiCompanyResult">
+        <include refid="selectMeiCompanyVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="companyName != null  and companyName != ''"> and company_name like concat('%', #{companyName}, '%')</if>
+            <if test="region != null  and region != ''"> and region = #{region}</if>
+            <if test="business != null  and business != ''"> and business = #{business}</if>
+            <if test="linkman != null  and linkman != ''"> and linkman = #{linkman}</if>
+            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectMeiCompanyById" parameterType="Long" resultMap="MeiCompanyResult">
+        <include refid="selectMeiCompanyVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertMeiCompany" parameterType="MeiCompany" useGeneratedKeys="true" keyProperty="id">
+        insert into mei_company
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="companyName != null and companyName != ''">company_name,</if>
+            <if test="region != null and region != ''">region,</if>
+            <if test="business != null">business,</if>
+            <if test="linkman != null and linkman != ''">linkman,</if>
+            <if test="phone != null and phone != ''">phone,</if>
+            <if test="status != null">status,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="companyName != null and companyName != ''">#{companyName},</if>
+            <if test="region != null and region != ''">#{region},</if>
+            <if test="business != null">#{business},</if>
+            <if test="linkman != null and linkman != ''">#{linkman},</if>
+            <if test="phone != null and phone != ''">#{phone},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMeiCompany" parameterType="MeiCompany">
+        update mei_company
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="companyName != null and companyName != ''">company_name = #{companyName},</if>
+            <if test="region != null and region != ''">region = #{region},</if>
+            <if test="business != null">business = #{business},</if>
+            <if test="linkman != null and linkman != ''">linkman = #{linkman},</if>
+            <if test="phone != null and phone != ''">phone = #{phone},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteMeiCompanyById" parameterType="Long">
+        delete from mei_company where id = #{id}
+    </delete>
+
+    <delete id="deleteMeiCompanyByIds">
+        delete from mei_company where id in
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

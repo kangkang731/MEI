@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mei.mapper.MeiLabMapper">
+    
+    <resultMap type="MeiLab" id="MeiLabResult">
+        <result property="id"    column="id"    />
+        <result property="schoolName"    column="school_name"    />
+        <result property="labName"    column="lab_name"    />
+        <result property="content"    column="content"    />
+        <result property="status"    column="status"    />
+    </resultMap>
+
+    <sql id="selectMeiLabVo">
+        select id, school_name, lab_name, content, status from mei_lab
+    </sql>
+
+    <select id="selectMeiLabList" parameterType="MeiLab" resultMap="MeiLabResult">
+        <include refid="selectMeiLabVo"/>
+        <where>  
+            <if test="schoolName != null  and schoolName != ''"> and school_name like concat('%', #{schoolName}, '%')</if>
+            <if test="labName != null  and labName != ''"> and lab_name like concat('%', #{labName}, '%')</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectMeiLabById" parameterType="Long" resultMap="MeiLabResult">
+        <include refid="selectMeiLabVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertMeiLab" parameterType="MeiLab" useGeneratedKeys="true" keyProperty="id">
+        insert into mei_lab
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="schoolName != null and schoolName != ''">school_name,</if>
+            <if test="labName != null and labName != ''">lab_name,</if>
+            <if test="content != null">content,</if>
+            <if test="status != null">status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="schoolName != null and schoolName != ''">#{schoolName},</if>
+            <if test="labName != null and labName != ''">#{labName},</if>
+            <if test="content != null">#{content},</if>
+            <if test="status != null">#{status},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMeiLab" parameterType="MeiLab">
+        update mei_lab
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="schoolName != null and schoolName != ''">school_name = #{schoolName},</if>
+            <if test="labName != null and labName != ''">lab_name = #{labName},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="status != null">status = #{status},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteMeiLabById" parameterType="Long">
+        delete from mei_lab where id = #{id}
+    </delete>
+
+    <delete id="deleteMeiLabByIds">
+        delete from mei_lab where id in
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
