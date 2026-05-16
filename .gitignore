@@ -1,0 +1,68 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Build output
+dist/
+dist-ssr/
+build/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Claude Code
+.claude/
+
+# Embedded git repos
+MEIPlatForm/
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Test coverage
+coverage/
+tests/**/coverage/
+__screenshots__/
+
+# Misc
+*.local
+*.tsbuildinfo
+.eslintcache
+selenium-debug.log
+
+# Project-specific
+ppt/
+*.pptx
+*.ppt
+*.zip
+*.sql
+*.docx
+.pohoto/
+MEI.apifox.json
